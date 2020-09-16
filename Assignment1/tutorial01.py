@@ -72,6 +72,10 @@ def printGP(a, r, n):
 #You cant use the inbuilt python function. Write your own function
 def printAP(a, d, n): 
 	ap=[]
+	for i in range(n):
+		if i == 0 : ap.append(a)
+		else:
+			ap.append(add(ap[-1], d))
 	return ap
 
 # Python 3 program to print HP.   Harmonic Progression
