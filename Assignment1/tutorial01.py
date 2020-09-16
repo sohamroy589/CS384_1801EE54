@@ -62,6 +62,10 @@ def power(num1, num2): #num1 ^ num2
 #You cant use the inbuilt python function. Write your own function
 def printGP(a, r, n): 
 	gp=[]
+	for i in range(n):
+		if i == 0 : gp.append(a)
+		else:
+			gp.append(multiply(gp[-1], r))
 	return gp 
 
 # Python 3 program to print AP.  arithmetic Progression
