@@ -3,39 +3,40 @@ def throw_error():
 	print("Error: Invalid Operation!")
 
 # Function to check the type of the variable
-def type_check(num):
-	if type(num) == int or type(num) == float:
-		return True
-	return False
+def type_check(*nums):
+	for num in nums : 
+		if type(num) != int and type(num) != float:
+			return False
+	return True
 
 # Function to add two numbers 
 def add(num1, num2): 
-	if not (type_check(num1) and type_check(num2)):
-		throw_error()
+	if not type_check(num1, num2):
+		# throw_error()
 		return 0
 	addition = num1 + num2
 	return addition
 
 # Function to subtract two numbers 
 def subtract(num1, num2): 
-	if not (type_check(num1) and type_check(num2)):
-		throw_error()
+	if not type_check(num1, num2):
+		# throw_error()
 		return 0
 	subtraction = num1 - num2
 	return subtraction
 
 # Function to multiply two numbers 
 def multiply(num1, num2): 
-	if not (type_check(num1) and type_check(num2)):
-		throw_error()
+	if not type_check(num1, num2):
+		# throw_error()
 		return 0
 	multiplication = num1 * num2
 	return multiplication
 
 # Function to divide two numbers 
 def divide(num1, num2): 
-	if not (type_check(num1) and type_check(num2)):
-		throw_error()
+	if not type_check(num1, num2):
+		# throw_error()
 		return 0
 	if num2 == 0:
 		print("Can't divide by zero!")
@@ -47,8 +48,8 @@ def divide(num1, num2):
 # Function to add power function
 #You cant use the inbuilt python function x ** y . Write your own function
 def power(num1, num2): #num1 ^ num2
-	if not (type_check(num1) and type_check(num2)):
-		throw_error()
+	if not type_check(num1, num2):
+		# throw_error()
 		return 0
 	power = 1
 	while num2 > 0:
@@ -62,6 +63,8 @@ def power(num1, num2): #num1 ^ num2
 #You cant use the inbuilt python function. Write your own function
 def printGP(a, r, n): 
 	gp=[]
+	if not type_check(a, r, n):
+		return 0
 	for i in range(n):
 		if i == 0 : gp.append(a)
 		else:
@@ -72,6 +75,8 @@ def printGP(a, r, n):
 #You cant use the inbuilt python function. Write your own function
 def printAP(a, d, n): 
 	ap=[]
+	if not type_check(a, d, n):
+		return 0
 	for i in range(n):
 		if i == 0 : ap.append(a)
 		else:
@@ -82,5 +87,18 @@ def printAP(a, d, n):
 #You cant use the inbuilt python function. Write your own function
 def printHP(a, d, n): 
 	hp=[]
+	if not type_check(a, d, n):
+		return 0
+	for i in range(n):
+		if i == 0 : hp.append(round(a, 3))
+		else:
+			if hp[-1] == 0 :
+				# throw_error()
+				return 0
+			inverse_of_next = 1 / hp[-1] + d
+			if inverse_of_next == 0 :
+				# throw_error()
+				return 0
+			hp.append(round(1 / inverse_of_next, 3))
 	return hp
 	
