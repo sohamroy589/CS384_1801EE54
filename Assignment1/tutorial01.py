@@ -4,7 +4,7 @@ def throw_error():
 
 # Function to check the type of the variable
 def type_check(num):
-	if type(num) == int or type(num) == float or type(num) == complex:
+	if type(num) == int or type(num) == float:
 		return True
 	return False
 
@@ -47,7 +47,15 @@ def divide(num1, num2):
 # Function to add power function
 #You cant use the inbuilt python function x ** y . Write your own function
 def power(num1, num2): #num1 ^ num2
-	#DivisionLogic 
+	if not (type_check(num1) and type_check(num2)):
+		throw_error()
+		return 0
+	power = 1
+	while num2 > 0:
+		if num2 & 1:
+			power *= num1
+		num1 *= num1
+		num2 >>= 1
 	return power
 	
 # Python 3 program to print GP.  geometric Progression
