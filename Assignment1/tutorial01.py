@@ -48,16 +48,19 @@ def divide(num1, num2):
 # Function to add power function
 #You cant use the inbuilt python function x ** y . Write your own function
 def power(num1, num2): #num1 ^ num2
-	if not type_check(num1, num2):
+	if not type_check(num1) or not isinstance(num2, int):
 		# throw_error()
 		return 0
 	power = 1
+	negative_power = num2 < 0
+	num2 = abs(num2)
 	while num2 > 0:
 		if num2 & 1:
 			power *= num1
 		num1 *= num1
 		num2 >>= 1
-	return power
+	if negative_power : return round(1 / power, 3)
+	return round(power, 3)
 	
 # Python 3 program to print GP.  geometric Progression
 #You cant use the inbuilt python function. Write your own function
