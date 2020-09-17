@@ -90,15 +90,9 @@ def printHP(a, d, n):
 	if not type_check(a, d, n):
 		return 0
 	for i in range(n):
-		if i == 0 : hp.append(round(a, 3))
-		else:
-			if hp[-1] == 0 :
-				# throw_error()
-				return 0
-			inverse_of_next = 1 / hp[-1] + d
-			if inverse_of_next == 0 :
-				# throw_error()
-				return 0
-			hp.append(round(1 / inverse_of_next, 3))
+		inverse_of_term = a + i * d
+		if inverse_of_term == 0:
+			return 0
+		hp.append(round(1 / inverse_of_term, 3))
 	return hp
 	
