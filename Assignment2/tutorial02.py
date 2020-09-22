@@ -1,4 +1,5 @@
 # All decimal 3 places
+import math
 
 # Function to compute mean
 def mean(first_list):
@@ -11,23 +12,30 @@ def mean(first_list):
 
 # Function to compute median. You cant use Python functions
 def median(first_list):
-    median_value = 0
-    # median Logic
+    # if len(first_list) == 0:
+    #     return 0
+    # sorted_list = sorted(first_list)
+    # median_value = round(sorted_list[len(first_list) >> 1], 3)
     return median_value
 
 
 # Function to compute Standard deviation. You cant use Python functions
 def standard_deviation(first_list):
-    standard_deviation_value = 0
-    # Standard deviation Logic
     return standard_deviation_value
 
 
 # Function to compute variance. You cant use Python functions
 def variance(first_list):
+    if len(first_list) == 0:
+        return 0
     variance_value = 0
-    # variance Logic
-    return variance_value
+    mean_value = mean(first_list)
+    for x in first_list:
+        if isinstance(x, int) or isinstance(x, float):
+            variance_value += (x - mean_value) ** 2
+        else: return 0
+    variance_value /= len(first_list)
+    return round(variance_value, 3)
 
 
 # Function to compute RMSE. You cant use Python functions
