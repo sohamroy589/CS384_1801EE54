@@ -72,5 +72,9 @@ def kurtosis(first_list):
 
 # Function to compute sum. You cant use Python functions
 def summation(first_list):
-    # sum Logic
+    summation_value = 0
+    for x in first_list:
+        if isinstance(x, int) or isinstance(x, float):
+            summation_value += x
+        else: return 0 
     return summation_value
