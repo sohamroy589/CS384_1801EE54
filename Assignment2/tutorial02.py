@@ -12,10 +12,10 @@ def mean(first_list):
 
 # Function to compute median. You cant use Python functions
 def median(first_list):
-    # if len(first_list) == 0:
-    #     return 0
-    # sorted_list = sorted(first_list)
-    # median_value = round(sorted_list[len(first_list) >> 1], 3)
+    if len(first_list) == 0:
+        return 0
+    sorted_list = sorting(first_list)
+    median_value = round(sorted_list[len(first_list) >> 1], 3)
     return median_value
 
 
