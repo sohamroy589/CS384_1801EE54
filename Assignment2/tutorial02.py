@@ -18,7 +18,7 @@ def mean_helper(first_list):
 def median(first_list):
     if len(first_list) == 0:
         return 0
-    sorted_list = sorting(first_list)
+    sorted_list = sorting(first_list.copy())
     median_value = round(sorted_list[len(first_list) >> 1], 3)
     return round(median_value, 3)
 
@@ -56,7 +56,7 @@ def mse_helper(first_list, second_list):
         return 0
     for x, y in zip(first_list, second_list):
         if isinstance(x, (int, float)) and isinstance(y, (int, float)):
-            mse_value += (x - y) ** 2
+            mse_value += (x - y) * (x - y)
         else: 
             return 0
     mse_value /= len(first_list)
@@ -90,16 +90,24 @@ def nse(first_list, second_list):
             return 0
     mse_value = mse_helper(first_list, second_list)
     variance_value = variance_helper(first_list)
-    nse_value = 1 - mse_value / variance_value
+    nse_value = 1 - (mse_value / variance_value)
     return round(nse_value, 3)
 
 
 # Function to compute Pearson correlation coefficient. You cant use Python functions
 def pcc(first_list, second_list):
+    if len(first_list) != len(second_list) or len(first_list) == 0:
+        return 0
+    for x, y in zip(first_list, second_list):
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float))):
+            return 0
+    x_mean, y_mean = mean_helper(first_list), mean_helper(second_list)
+    x_var, y_var = variance_helper(first_list), variance_helper(second_list)
     pcc_value = 0
-    # nse Logic
-    return pcc_value
-
+    for i in range(len(first_list)):
+        pcc_value += (first_list[i] - x_mean) * (second_list[i] - y_mean)
+    pcc_value /= math.sqrt(x_var * y_var) * len(first_list)
+    return round(pcc_value, 3)
 
 # Function to compute Skewness. You cant use Python functions
 def skewness(first_list):
