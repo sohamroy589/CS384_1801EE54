@@ -34,7 +34,7 @@ def variance_helper(first_list):
     variance_value = 0
     mean_value = mean_helper(first_list)
     for x in first_list:
-        if isinstance(x, int) or isinstance(x, float):
+        if isinstance(x, (int, float)):
             variance_value += (x - mean_value) ** 2
         else: return 0
     variance_value /= len(first_list)
@@ -47,7 +47,7 @@ def variance(first_list):
 
 # Function to compute RMSE. You cant use Python functions
 def rmse(first_list, second_list):
-    return round(math.sqrt(mse_helper(first_list, second_list)), 3)
+    # return round(math.sqrt(mse_helper(first_list, second_list)), 3)
 
 
 def mse_helper(first_list, second_list):
@@ -55,7 +55,7 @@ def mse_helper(first_list, second_list):
     if len(first_list) != len(second_list) or len(first_list) == 0:
         return 0
     for x, y in zip(first_list, second_list):
-        if (isinstance(x, int) or isinstance(x, float)) and (isinstance(y, int) or isinstance(y, float)):
+        if isinstance(x, (int, float)) and isinstance(y, (int, float)):
             mse_value += (x - y) ** 2
         else: 
             return 0
@@ -73,7 +73,7 @@ def mae(first_list, second_list):
         return 0
     diff_list = []
     for x, y in zip(first_list, second_list):
-        if (isinstance(x, int) or isinstance(x, float)) and (isinstance(y, int) or isinstance(y, float)):
+        if isinstance(x, (int, float)) and isinstance(y, (int, float)):
             diff_list.append(abs(x - y))
         else: 
             return 0
@@ -83,9 +83,15 @@ def mae(first_list, second_list):
 
 # Function to compute NSE. You cant use Python functions
 def nse(first_list, second_list):
-    nse_value = 0
-    # nse Logic
-    return nse_value
+    if len(first_list) != len(second_list) or len(first_list) == 0:
+        return 0
+    for x, y in zip(first_list, second_list):
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float))):
+            return 0
+    mse_value = mse_helper(first_list, second_list)
+    variance_value = variance_helper(first_list)
+    nse_value = 1 - mse_value / variance_value
+    return round(nse_value, 3)
 
 
 # Function to compute Pearson correlation coefficient. You cant use Python functions
@@ -126,7 +132,7 @@ def summation(first_list):
 def summation_helper(first_list):
     summation_value = 0
     for x in first_list:
-        if isinstance(x, int) or isinstance(x, float):
+        if isinstance(x, (int, float)):
             summation_value += x
         else: return 0 
     return summation_value
