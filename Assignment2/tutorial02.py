@@ -112,8 +112,14 @@ def pcc(first_list, second_list):
 # Function to compute Skewness. You cant use Python functions
 def skewness(first_list):
     skewness_value = 0
-    # Skewness Logic
-    return skewness_value
+    x_mean = mean_helper(first_list)
+    for x in first_list:
+        if isinstance(x, (int, float)):
+            skewness_value += (x - x_mean) ** 3
+        else:
+            return 0
+    skewness_value /= len(first_list) * (math.sqrt(variance_helper(first_list)) ** 3)
+    return round(skewness_value, 3)
     
 def sorting(first_list):
     sorted_list = first_list
