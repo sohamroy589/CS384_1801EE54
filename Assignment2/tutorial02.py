@@ -3,11 +3,15 @@ import math
 
 # Function to compute mean
 def mean(first_list):
-    sum_value = summation(first_list)
+    return round(mean_helper(first_list), 3)
+
+
+def mean_helper(first_list):
+    sum_value = summation_helper(first_list)
     if len(first_list) == 0:
         return 0
     mean_value = sum_value / len(first_list)
-    return round(mean_value, 3)
+    return mean_value
 
 
 # Function to compute median. You cant use Python functions
@@ -16,37 +20,37 @@ def median(first_list):
         return 0
     sorted_list = sorting(first_list)
     median_value = round(sorted_list[len(first_list) >> 1], 3)
-    return median_value
+    return round(median_value, 3)
 
 
 # Function to compute Standard deviation. You cant use Python functions
 def standard_deviation(first_list):
-    return round(math.sqrt(variance(first_list)), 3)
+    return round(math.sqrt(variance_helper(first_list)), 3)
 
 
-# Function to compute variance. You cant use Python functions
-def variance(first_list):
+def variance_helper(first_list):
     if len(first_list) == 0:
         return 0
     variance_value = 0
-    mean_value = mean(first_list)
+    mean_value = mean_helper(first_list)
     for x in first_list:
         if isinstance(x, int) or isinstance(x, float):
             variance_value += (x - mean_value) ** 2
         else: return 0
     variance_value /= len(first_list)
-    return round(variance_value, 3)
+    return variance_value
+
+# Function to compute variance. You cant use Python functions
+def variance(first_list):
+    return round(variance_helper(first_list), 3)
 
 
 # Function to compute RMSE. You cant use Python functions
 def rmse(first_list, second_list):
-    rmse_value = 0
-    # RMSE Logic
-    return rmse_value
+    return round(math.sqrt(mse_helper(first_list, second_list)), 3)
 
 
-# Function to compute mse. You cant use Python functions
-def mse(first_list, second_list):
+def mse_helper(first_list, second_list):
     mse_value = 0
     if len(first_list) != len(second_list) or len(first_list) == 0:
         return 0
@@ -56,14 +60,25 @@ def mse(first_list, second_list):
         else: 
             return 0
     mse_value /= len(first_list)
-    return round(mse_value, 3)
+    return mse_value
+
+# Function to compute mse. You cant use Python functions
+def mse(first_list, second_list):
+    return round(mse_helper(first_list, second_list), 3)
 
 
 # Function to compute mae. You cant use Python functions
 def mae(first_list, second_list):
-    mae_value = 0
-    # mae Logic
-    return mae_value
+    if len(first_list) != len(second_list) or len(first_list) == 0:
+        return 0
+    diff_list = []
+    for x, y in zip(first_list, second_list):
+        if (isinstance(x, int) or isinstance(x, float)) and (isinstance(y, int) or isinstance(y, float)):
+            diff_list.append(abs(x - y))
+        else: 
+            return 0
+    mae_value = summation_helper(diff_list) / len(first_list)
+    return round(mae_value, 3)
 
 
 # Function to compute NSE. You cant use Python functions
@@ -106,9 +121,12 @@ def kurtosis(first_list):
 
 # Function to compute sum. You cant use Python functions
 def summation(first_list):
+    return round(summation_helper(first_list), 3)
+
+def summation_helper(first_list):
     summation_value = 0
     for x in first_list:
         if isinstance(x, int) or isinstance(x, float):
             summation_value += x
         else: return 0 
-    return round(summation_value, 3)
+    return summation_value
