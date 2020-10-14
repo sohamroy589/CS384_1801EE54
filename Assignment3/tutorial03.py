@@ -2,6 +2,9 @@ import csv
 import os
 import re
 
+def return_to_assignment3():
+    os.chdir(r'C:\Users\hp\Desktop\CS384_1801EE54\Assignment3')
+
 #Function for checking Pre-existing files and adding the header accordingly
 def check_pre_existing_file(filename, fieldnames):
     if not os.path.exists(filename):
@@ -10,6 +13,7 @@ def check_pre_existing_file(filename, fieldnames):
             writer.writeheader()
 
 def course():
+    return_to_assignment3()
     with open('studentinfo_cs384.csv', 'r') as file:
         reader = csv.DictReader(file)
         cur_path = os.path.join(os.getcwd(), r'analytics\course')
@@ -48,8 +52,26 @@ def course():
 
 
 def country():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        os.chdir(r'analytics\country')
+        cur_path = os.getcwd()
+        
+        reader = csv.DictReader(file)
+        for row in reader:
+            cur_country = row['country']
+            filename = cur_country + '.csv'
+            if not re.match("\D+", cur_country):
+                filename = 'misc.csv'
+
+            fieldnames = list(row.keys())
+            check_pre_existing_file(filename, fieldnames)
+
+            with open(filename, 'a', newline='') as w_file:
+                writer = csv.DictWriter(w_file, fieldnames=fieldnames)
+                writer.writerow(row)
+            
+            os.chdir(cur_path)
 
 
 def email_domain_extract():
