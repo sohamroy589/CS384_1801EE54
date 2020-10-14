@@ -2,6 +2,7 @@ import csv
 import os
 import re
 
+#This Function sets the current working directory to Assignment3
 def return_to_assignment3():
     os.chdir(r'C:\Users\hp\Desktop\CS384_1801EE54\Assignment3')
 
@@ -75,8 +76,29 @@ def country():
 
 
 def email_domain_extract():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        reader = csv.DictReader(file)
+        os.chdir('analytics')
+        if not os.path.exists('email_domain'):
+            os.mkdir('email_domain')
+        os.chdir('email_domain')
+        cur_path = os.getcwd()
+        
+        for row in reader:
+            domain = re.search("(?<=@)[^.]+(?=\.)", row['email'])
+            filename = ''
+            if domain:
+                filename = domain.group() + '.csv'
+            else:
+                filename = 'misc.csv'
+            
+            fieldnames = list(row.keys())
+            check_pre_existing_file(filename, fieldnames)
+            with open(filename, 'a', newline='') as w_file:
+                writer = csv.DictWriter(w_file, fieldnames = fieldnames)
+                writer.writerow(row)
+            os.chdir(cur_path)
 
 
 def gender():
