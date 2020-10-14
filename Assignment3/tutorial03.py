@@ -6,6 +6,11 @@ import re
 def return_to_assignment3():
     os.chdir(r'C:\Users\hp\Desktop\CS384_1801EE54\Assignment3')
 
+def create_directory(name):
+    os.chdir('analytics')
+    if not os.path.exists(name):
+        os.mkdir(name)
+
 #Function for checking Pre-existing files and adding the header accordingly
 def check_pre_existing_file(filename, fieldnames):
     if not os.path.exists(filename):
@@ -17,10 +22,9 @@ def course():
     return_to_assignment3()
     with open('studentinfo_cs384.csv', 'r') as file:
         reader = csv.DictReader(file)
-        cur_path = os.path.join(os.getcwd(), r'analytics\course')
-        # print(cur_path)
-        os.chdir(r'analytics\course')
-        # print(os.getcwd())
+        create_directory('course')
+        os.chdir('course')
+        cur_path = os.getcwd()
         course_name = {'01' : 'btech', '11' : 'mtech', '12' : 'msc', '21' : 'phd'}
         for row in reader:
             roll_no = row['id']
@@ -55,7 +59,8 @@ def course():
 def country():
     return_to_assignment3()
     with open('studentinfo_cs384.csv', 'r') as file:
-        os.chdir(r'analytics\country')
+        create_directory('country')
+        os.chdir('country')
         cur_path = os.getcwd()
         
         reader = csv.DictReader(file)
@@ -79,9 +84,7 @@ def email_domain_extract():
     return_to_assignment3()
     with open('studentinfo_cs384.csv', 'r') as file:
         reader = csv.DictReader(file)
-        os.chdir('analytics')
-        if not os.path.exists('email_domain'):
-            os.mkdir('email_domain')
+        create_directory('email_domain')
         os.chdir('email_domain')
         cur_path = os.getcwd()
         
@@ -102,8 +105,27 @@ def email_domain_extract():
 
 
 def gender():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        create_directory('gender')
+        os.chdir('gender')
+        cur_path = os.getcwd()
+        
+        reader = csv.DictReader(file)
+        for row in reader:
+            cur_gender = row['gender'].lower()
+            filename = cur_gender + '.csv'
+            if cur_gender not in ('male', 'female'):
+                filename = 'misc.csv'
+
+            fieldnames = list(row.keys())
+            check_pre_existing_file(filename, fieldnames)
+
+            with open(filename, 'a', newline='') as w_file:
+                writer = csv.DictWriter(w_file, fieldnames=fieldnames)
+                writer.writerow(row)
+            
+            os.chdir(cur_path)
 
 
 def dob():
