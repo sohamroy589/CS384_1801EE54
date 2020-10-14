@@ -1,6 +1,13 @@
 import csv
 import os
+import re
 
+#Function for checking Pre-existing files and adding the header accordingly
+def check_pre_existing_file(filename, fieldnames):
+    if not os.path.exists(filename):
+        with open(filename, 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames = fieldnames)
+            writer.writeheader()
 
 def course():
     with open('studentinfo_cs384.csv', 'r') as file:
@@ -10,13 +17,12 @@ def course():
         os.chdir(r'analytics\course')
         # print(os.getcwd())
         course_name = {'01' : 'btech', '11' : 'mtech', '12' : 'msc', '21' : 'phd'}
-        branches = ['cs', 'ee', 'me', 'cb', 'ce']
         for row in reader:
             roll_no = row['id']
             cur_filename = ''
             try:
                 branch_name = roll_no[4:6].lower()
-                if branch_name in branches:
+                if re.match("\d\d\d\d[A-Z][A-Z]\d\d", roll_no):
                     if not os.path.exists(branch_name):
                         os.mkdir(branch_name)
                     os.chdir(branch_name)
@@ -34,10 +40,7 @@ def course():
         
             fieldnames = list(row.keys())
             # print(fieldnames)
-            if not os.path.exists(cur_filename):
-                with open(cur_filename, 'w', newline='') as w_file:
-                    writer = csv.DictWriter(w_file, fieldnames = fieldnames)
-                    writer.writeheader()
+            check_pre_existing_file(cur_filename, fieldnames)
             with open(cur_filename, 'a', newline = '') as w_file:
                 writer = csv.DictWriter(w_file, fieldnames = fieldnames)
                 writer.writerow(row)
