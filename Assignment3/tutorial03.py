@@ -132,8 +132,45 @@ def gender():
 
 
 def dob():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        create_directory('dob')
+        os.chdir('dob')
+        cur_path = os.getcwd()
+
+        reader = csv.DictReader(file)
+        for row in reader:
+            cur_dob = row['dob']
+            ddmmyy = re.split('[/-]', cur_dob)
+            try:
+                date = int(ddmmyy[0])
+                month = int(ddmmyy[1])
+                year = int(ddmmyy[2])
+                if 1995 <= year <= 1999:
+                    filename = 'bday_1995_1999.csv'
+                elif 2000 <= year <= 2004:
+                    filename = 'bday_2000_2004.csv'
+                elif 2005 <= year <= 2009:
+                    filename = 'bday_2005_2009.csv'
+                elif 2010 <= year <= 2014:
+                    filename = 'bday_2010_2014.csv'
+                elif 2015 <= year <= 2020:
+                    filename = 'bday_2015_2020.csv'
+                else:
+                    filename = 'misc.csv'
+                if not (1 <= date <= 31) or not (1 <= month <= 12):
+                    filename = 'misc.csv'
+            except:
+                filename = 'misc.csv'
+            
+            fieldnames = list(row.keys())
+            check_pre_existing_file(filename, fieldnames)
+
+            with open(filename, 'a', newline='') as w_file:
+                writer = csv.DictWriter(w_file, fieldnames)
+                writer.writerow(row)
+
+        os.chdir(cur_path)
 
 
 def state():
