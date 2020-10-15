@@ -70,7 +70,6 @@ def country():
     with open('studentinfo_cs384.csv', 'r') as file:
         create_directory('country')
         os.chdir('country')
-        cur_path = os.getcwd()
         
         reader = csv.DictReader(file)
         for row in reader:
@@ -85,8 +84,6 @@ def country():
             with open(filename, 'a', newline='') as w_file:
                 writer = csv.DictWriter(w_file, fieldnames=fieldnames)
                 writer.writerow(row)
-            
-            os.chdir(cur_path)
 
 
 def email_domain_extract():
@@ -95,7 +92,6 @@ def email_domain_extract():
         reader = csv.DictReader(file)
         create_directory('email_domain')
         os.chdir('email_domain')
-        cur_path = os.getcwd()
         
         for row in reader:
             domain = re.search("(?<=@)[^.]+(?=\.)", row['email'])
@@ -110,7 +106,6 @@ def email_domain_extract():
             with open(filename, 'a', newline='') as w_file:
                 writer = csv.DictWriter(w_file, fieldnames = fieldnames)
                 writer.writerow(row)
-            os.chdir(cur_path)
 
 
 def gender():
@@ -118,7 +113,6 @@ def gender():
     with open('studentinfo_cs384.csv', 'r') as file:
         create_directory('gender')
         os.chdir('gender')
-        cur_path = os.getcwd()
         
         reader = csv.DictReader(file)
         for row in reader:
@@ -133,8 +127,6 @@ def gender():
             with open(filename, 'a', newline='') as w_file:
                 writer = csv.DictWriter(w_file, fieldnames=fieldnames)
                 writer.writerow(row)
-            
-            os.chdir(cur_path)
 
 
 def dob():
@@ -142,7 +134,6 @@ def dob():
     with open('studentinfo_cs384.csv', 'r') as file:
         create_directory('dob')
         os.chdir('dob')
-        cur_path = os.getcwd()
 
         reader = csv.DictReader(file)
         for row in reader:
@@ -176,15 +167,12 @@ def dob():
                 writer = csv.DictWriter(w_file, fieldnames)
                 writer.writerow(row)
 
-        os.chdir(cur_path)
-
 
 def state():
     return_to_assignment3()
     with open('studentinfo_cs384.csv', 'r') as file:
         create_directory('state')
         os.chdir('state')
-        cur_path = os.getcwd()
         
         reader = csv.DictReader(file)
         for row in reader:
@@ -199,8 +187,6 @@ def state():
             with open(filename, 'a', newline='') as w_file:
                 writer = csv.DictWriter(w_file, fieldnames=fieldnames)
                 writer.writerow(row)
-            
-            os.chdir(cur_path)
 
 
 def blood_group():
@@ -208,7 +194,6 @@ def blood_group():
     with open('studentinfo_cs384.csv', 'r') as file:
         create_directory('blood_group')
         os.chdir('blood_group')
-        cur_path = os.getcwd()
         
         reader = csv.DictReader(file)
         for row in reader:
@@ -223,8 +208,6 @@ def blood_group():
             with open(filename, 'a', newline='') as w_file:
                 writer = csv.DictWriter(w_file, fieldnames=fieldnames)
                 writer.writerow(row)
-            
-        os.chdir(cur_path)
 
 # Create the new file here and also sort it in this function only.
 def new_file_sort():
