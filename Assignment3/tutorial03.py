@@ -21,6 +21,12 @@ def check_pre_existing_file(filename, fieldnames):
             writer = csv.DictWriter(file, fieldnames = fieldnames)
             writer.writeheader()
 
+def del_create_analytics_folder():
+    return_to_assignment3()
+    if os.path.exists('analytics'):
+        shutil.rmtree('analytics', ignore_errors=True)
+    os.mkdir('analytics')
+
 def course():
     return_to_assignment3()
     with open('studentinfo_cs384.csv', 'r') as file:
@@ -218,9 +224,42 @@ def blood_group():
                 writer = csv.DictWriter(w_file, fieldnames=fieldnames)
                 writer.writerow(row)
             
-            os.chdir(cur_path)
+        os.chdir(cur_path)
 
 # Create the new file here and also sort it in this function only.
 def new_file_sort():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        os.chdir('analytics')
+        
+        data = []
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            new_row = {}
+            for key in row.keys():
+                if key == 'full_name':
+                    full_name = row[key].split(' ')
+                    first_name, last_name = full_name[0], full_name[1]
+                    new_row['first_name'] = first_name
+                    new_row['last_name'] = last_name
+                else:
+                    new_row[key] = row[key]
+            data.append(new_row)
+
+        fieldnames = list(data[0].keys())
+        with open('studentinfo_cs384_names_split.csv', 'w', newline='') as w_file:
+            writer = csv.DictWriter(w_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(data)
+    
+    with open('studentinfo_cs384_names_split.csv', 'r') as file:
+        reader = csv.DictReader(file)
+
+        fieldnames = reader.fieldnames
+        data = sorted(reader, key=lambda row: row['first_name'])
+
+        with open('studentinfo_cs384_names_split_sorted_first_name.csv', 'w', newline='') as w_file:
+            writer = csv.DictWriter(w_file, fieldnames)
+            writer.writeheader()
+            writer.writerows(data)
