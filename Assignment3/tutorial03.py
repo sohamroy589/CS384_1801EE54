@@ -142,9 +142,27 @@ def state():
 
 
 def blood_group():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        create_directory('blood_group')
+        os.chdir('blood_group')
+        cur_path = os.getcwd()
+        
+        reader = csv.DictReader(file)
+        for row in reader:
+            cur_blood_group = row['blood_group']
+            filename = cur_blood_group + '.csv'
+            if not re.match("[ABO]{1,2}[+-]", cur_blood_group):
+                filename = 'misc.csv'
 
+            fieldnames = list(row.keys())
+            check_pre_existing_file(filename, fieldnames)
+
+            with open(filename, 'a', newline='') as w_file:
+                writer = csv.DictWriter(w_file, fieldnames=fieldnames)
+                writer.writerow(row)
+            
+            os.chdir(cur_path)
 
 # Create the new file here and also sort it in this function only.
 def new_file_sort():
