@@ -1,15 +1,18 @@
 import csv
 import os
 import re
+import shutil
 
 #This Function sets the current working directory to Assignment3
 def return_to_assignment3():
     os.chdir(r'C:\Users\hp\Desktop\CS384_1801EE54\Assignment3')
 
+#This function creates corresponding directories when other functions are called
 def create_directory(name):
     os.chdir('analytics')
-    if not os.path.exists(name):
-        os.mkdir(name)
+    if os.path.exists(name):
+        shutil.rmtree(name, ignore_errors=True)
+    os.mkdir(name)
 
 #Function for checking Pre-existing files and adding the header accordingly
 def check_pre_existing_file(filename, fieldnames):
