@@ -137,8 +137,27 @@ def dob():
 
 
 def state():
-    # Read csv and process
-    pass
+    return_to_assignment3()
+    with open('studentinfo_cs384.csv', 'r') as file:
+        create_directory('state')
+        os.chdir('state')
+        cur_path = os.getcwd()
+        
+        reader = csv.DictReader(file)
+        for row in reader:
+            cur_state = row['state']
+            filename = cur_state + '.csv'
+            if not cur_state:
+                filename = 'misc.csv'
+
+            fieldnames = list(row.keys())
+            check_pre_existing_file(filename, fieldnames)
+
+            with open(filename, 'a', newline='') as w_file:
+                writer = csv.DictWriter(w_file, fieldnames=fieldnames)
+                writer.writerow(row)
+            
+            os.chdir(cur_path)
 
 
 def blood_group():
