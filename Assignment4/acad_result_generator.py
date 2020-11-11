@@ -40,7 +40,7 @@ def create_individual():
                 filename = roll + '_individual.csv'
             else:
                 filename = 'misc.csv'
-            if not(row['total_credits'] and row['credit_obtained'].upper() in grade.keys() and 1 <= int(row['sem']) <= 8):
+            if not(row['total_credits'] and row['credit_obtained'].upper() in grade.keys() and re.match(r'\d+', row['sem'])):
                 filename = 'misc.csv'
             if filename == 'misc.csv':
                 fieldnames = list(row.keys())
@@ -67,13 +67,15 @@ def create_overall():
         for rfile_name in os.listdir(os.getcwd()):
             if rfile_name == 'misc.csv':
                 continue
-            info = [{'Semester': i, 'Semester Credits': 0, 'Semester Credits Cleared': 0, 'SPI': 0, 'Total Credits': 0, 'Total Credits Cleared': 0, 'CPI': 0} for i in range(0, 9)]
+            info = {}
             filename = ''
-            total_sem = 9
+            initial = {'Semester': 0, 'Semester Credits': 0, 'Semester Credits Cleared': 0, 'SPI': 0, 'Total Credits': 0, 'Total Credits Cleared': 0, 'CPI': 0}
+            fieldnames = list(initial.keys())
+            max_sem = 0
+            info[0] = initial.copy()
             with open(rfile_name, 'r') as rfile:
                 reader = csv.DictReader(rfile, fieldnames=['Subject', 'Credits', 'Type', 'Grade', 'Sem'])
                 roll = rfile_name.split('_')[0]
-                fieldnames = list(info[0].keys())
                 filename = roll + '_overall.csv'
                 next(reader)
                 next(reader)
@@ -81,23 +83,26 @@ def create_overall():
                 for row in reader:
                     # print(row)
                     sem = int(row['Sem'])
+                    max_sem = max(sem, max_sem)
+                    if info.get(sem) == None:
+                        info[sem] = initial.copy()
+                        info[sem]['Semester'] = sem
                     info[sem]['Semester Credits'] += int(row['Credits'])
                     info[sem]['Total Credits'] += int(row['Credits'])
                     if (grade[row['Grade']] > 0):
                         info[sem]['Semester Credits Cleared'] += int(row['Credits'])
                         info[sem]['Total Credits Cleared'] += int(row['Credits'])
                         info[sem]['SPI'] += grade[row['Grade']] * int(row['Credits'])
-            for sem in range(1, 9):
-                if info[sem]['Semester Credits'] == 0:
-                    total_sem = sem
-                    break
+            info = list(info.values())
+            info.sort(key=lambda x : x['Semester'])
+            for sem in range(1, len(info)):
                 info[sem]['Total Credits'] += info[sem-1]['Total Credits']
                 info[sem]['Total Credits Cleared'] += info[sem-1]['Total Credits Cleared']
                 info[sem]['CPI'] = (info[sem-1]['CPI'] * info[sem-1]['Total Credits'] + info[sem]['SPI']) / info[sem]['Total Credits']
                 info[sem]['SPI'] /= info[sem]['Semester Credits']
-            for sem in range(1, total_sem):
-                info[sem]['SPI'] = round(info[sem]['SPI'], 2)
-                info[sem]['CPI'] = round(info[sem]['CPI'], 2)
+            for data in info:
+                data['SPI'] = round(data['SPI'], 2)
+                data['CPI'] = round(data['CPI'], 2)
             if not os.path.exists(filename):
                 with open(filename, 'a', newline='') as wfile:
                     if filename != 'misc_overall.csv': 
@@ -105,10 +110,9 @@ def create_overall():
                         title_writer.writerow(['Roll: ' + roll])
                     writer = csv.DictWriter(wfile, fieldnames=fieldnames)
                     writer.writeheader()
-
             with open(filename, 'a', newline='') as wfile:
                 writer = csv.DictWriter(wfile, fieldnames=fieldnames)
-                writer.writerows(info[1:total_sem])
+                writer.writerows(info[1:])
 
 # Function for generating the result
 def result_generator():
