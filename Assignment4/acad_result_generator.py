@@ -48,7 +48,7 @@ def create_individual():
                 with open(filename, 'a', newline='') as wfile:
                     if filename != 'misc.csv': 
                         title_writer = csv.writer(wfile)
-                        title_writer.writerows([['Roll: ' + roll], ['Semester Wise Details']])
+                        title_writer.writerows([['Roll: ' + roll, '', '', '', ''], ['Semester Wise Details', '', '', '', '']])
                     writer = csv.DictWriter(wfile, fieldnames=fieldnames)
                     writer.writeheader()
             with open(filename, 'a', newline='') as wfile:
@@ -107,7 +107,7 @@ def create_overall():
                 with open(filename, 'a', newline='') as wfile:
                     if filename != 'misc_overall.csv': 
                         title_writer = csv.writer(wfile)
-                        title_writer.writerow(['Roll: ' + roll])
+                        title_writer.writerow(['Roll: ' + roll, '', '', '', '', '', ''])
                     writer = csv.DictWriter(wfile, fieldnames=fieldnames)
                     writer.writeheader()
             with open(filename, 'a', newline='') as wfile:
