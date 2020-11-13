@@ -68,9 +68,22 @@ def rename_Suits(folder_name):
     
 
 def rename_How_I_Met_Your_Mother(folder_name):
-    # rename Logic 
-    pass
-    
+    season_padding = int(input("Enter the season number padding...\n"))
+    episode_padding = int(input('Enter the episode number padding...\n'))
+    os.chdir('Subtitles')
+    for file in os.listdir(folder_name):
+        match_list = re.findall(r'(\d+)(?:\D+)(\d+)\W*(.+?)(?:\.720p|\.HDTV|\.en|\.1080p|\.fov)', file, re.IGNORECASE)
+        if not match_list:
+            match_list = re.findall(r'(\d+)\D+(\d+)\W*(.+)(?:\.mp4|\.srt)', file)
+        extension = re.search(r'\.mp4|\.srt', file).group()
+        season = match_list[0][0].lstrip('0')
+        ep_no = match_list[0][1].lstrip('0')
+        ep_name = match_list[0][2].strip()
+        new_filename = folder_name + ' - Season ' + '0'*(season_padding - len(season)) + season + ' Episode ' + '0'*(episode_padding - len(ep_no)) + ep_no + ' - ' + ep_name + extension
+        try:
+            os.rename(os.path.join(folder_name, file), os.path.join(folder_name, new_filename))
+        except FileExistsError:
+            os.remove(os.path.join(folder_name, file))
 
 if __name__ == '__main__':
     folder = input('Enter the full name of the Web Series..').strip().lower()
@@ -82,3 +95,5 @@ if __name__ == '__main__':
         rename_Sherlock('Sherlock')
     elif folder == 'suits':
         rename_Suits('Suits')
+    elif folder == 'how i met your mother':
+        rename_How_I_Met_Your_Mother('How I Met Your Mother')
