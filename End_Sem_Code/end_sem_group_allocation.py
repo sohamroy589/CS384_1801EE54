@@ -48,12 +48,12 @@ def create_groups(reader, no_of_groups):
     groups = [[] for i in range(no_of_groups)]
     stat = [{'group':None, 'total':None} for i in range(no_of_groups)]
     left = []
+    ptr = [0 for i in range(len(branch_strength_data))]
     # Dividing according to the floor division
     for d in branch_strength_data:
         q = d['BRANCH_STRENGTH'] // no_of_groups
         r = d['BRANCH_STRENGTH'] % no_of_groups
         for i in range(no_of_groups):
-            groups[i] += data[d['BRANCH_CODE']][i*q:(i+1)*q]
             if stat[i].get(d['BRANCH_CODE']): 
                 stat[i][d['BRANCH_CODE']] += q
             else:
@@ -62,13 +62,18 @@ def create_groups(reader, no_of_groups):
     # Including the remainders
     gr_no = 0
     for student in left:
-        groups[gr_no].append(student)
         branch = re.search(r'[A-Z]+', student['Roll']).group()
         if stat[gr_no].get(branch):
             stat[gr_no][branch] += 1
         else:
             stat[gr_no][branch] = 1
         gr_no = (gr_no + 1) % no_of_groups
+    # Finally adding in the groups
+    for i in range(no_of_groups):
+        for b in range(len(ptr)):
+            branch = branch_strength_data[b]['BRANCH_CODE']
+            groups[i] += data[branch][ptr[b]:ptr[b]+stat[i][branch]]
+            ptr[b] += stat[i][branch]
     # Create the files and update the group statistics
     for i in range(no_of_groups):
         filename = 'Group_G' + format(i+1, '02d')
