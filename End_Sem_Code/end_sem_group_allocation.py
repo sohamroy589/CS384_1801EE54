@@ -35,6 +35,7 @@ def create_branches(reader):
     for key, val in data.items():
         if os.path.exists(key+'.csv'):
             os.remove(key+'.csv')
+        val.sort(key=lambda x: x['Roll'])
         write(key+'.csv', val, fieldnames)
         branch_strength_data.append({'BRANCH_CODE': key, 'BRANCH_STRENGTH': len(val)})
     branch_strength_data.sort(key=lambda x: x['BRANCH_STRENGTH'], reverse=True)
