@@ -165,5 +165,5 @@ class quiz():
             user_input = input()
     
 if __name__ == '__main__':
-    q = quiz('q1.csv')
+    q = quiz('quiz_question.csv')
     q.run()
