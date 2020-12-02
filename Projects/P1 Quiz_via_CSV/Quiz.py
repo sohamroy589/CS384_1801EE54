@@ -7,6 +7,7 @@ import keyboard
 from Question import question
 
 user_input = None
+home = os.getcwd()
 
 def get_user_input():
     global user_input
@@ -18,6 +19,8 @@ class quiz():
             'name' : name,
             'roll_no': roll
         }
+        self.total_quiz_marks = 0
+        self.correct = 0
         self.unattempted = []
         self.questions = self.set_questions(q_name)
         self.marks = 0
@@ -29,6 +32,7 @@ class quiz():
         self.response = {}
         self.ask = False
         self.final_submit = False
+        self.name = q_name.rstrip('.csv')
 
     def final_sub(self):
         self.final_submit = True
@@ -122,6 +126,7 @@ class quiz():
             for row in reader:
                 q_list[row['ques_no']] = question(row)
                 self.unattempted.append(row['ques_no'])
+                self.total_quiz_marks += int(row['marks_correct_ans'])
             tstring = reader.fieldnames[-1]
             h_match = re.search(r'\d+(?=h)', tstring)
             m_match = re.search(r'\d+(?=m)', tstring)
@@ -137,6 +142,7 @@ class quiz():
         for q, res in self.response.items():
             if self.questions[q].answer == res:
                 self.marks += self.questions[q].correct_marks
+                self.correct += 1
             else:
                 self.marks += self.questions[q].wrong_marks
         for q in self.unattempted:
@@ -145,7 +151,57 @@ class quiz():
     
     def export(self):
         # Export into the database
-        print('Exported database into csv')
+        filename = self.name + '_' + self.participant['roll_no'] + '.csv'
+        path = os.path.join(os.getcwd(), 'individual_responses', filename)
+        if os.path.exists(path):
+            os.remove(path)
+        with open(path, 'a', newline='') as f:
+            with open(os.path.join(os.getcwd(), 'quiz_wise_questions', self.name+'.csv'), 'r') as rf:
+                reader = csv.DictReader(rf)
+                fieldnames = reader.fieldnames
+                fieldnames += ['marked_choice', 'Total', 'Legend']
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                cnt = 1
+                for row in reader:
+                    new_row = row.copy()
+                    new_row['marked_choice'] = self.response.get(row['ques_no'])
+                    if cnt == 1:
+                        new_row['Legend'] = 'Correct Choices'
+                        new_row['Total'] = self.correct
+                    elif cnt == 2:
+                        new_row['Legend'] = 'Wrong Choices'
+                        new_row['Total'] = len(self.questions) - self.correct - len(self.unattempted)
+                    elif cnt == 3:
+                        new_row['Legend'] = 'Unattmepted'
+                        new_row['Total'] = len(self.unattempted)
+                    elif cnt == 4:
+                        new_row['Legend'] = 'Marks Obtained'
+                        new_row['Total'] = self.marks
+                    elif cnt == 5:
+                        new_row['Legend'] = 'Total Quiz Marks'
+                        new_row['Total'] = self.total_quiz_marks
+                    writer.writerow(new_row)
+                    cnt += 1
+                while cnt <= 5:
+                    new_row = {}
+                    if cnt == 1:
+                        new_row['Legend'] = 'Correct Choices'
+                        new_row['Total'] = self.correct
+                    elif cnt == 2:
+                        new_row['Legend'] = 'Wrong Choices'
+                        new_row['Total'] = len(self.questions) - self.correct - len(self.unattempted)
+                    elif cnt == 3:
+                        new_row['Legend'] = 'Unattmepted'
+                        new_row['Total'] = len(self.unattempted)
+                    elif cnt == 4:
+                        new_row['Legend'] = 'Marks Obtained'
+                        new_row['Total'] = self.marks
+                    elif cnt == 5:
+                        new_row['Legend'] = 'Total Quiz Marks'
+                        new_row['Total'] = self.total_quiz_marks
+                    writer.writerow(new_row)
+                    cnt += 1
 
     def run(self):
         global user_input
@@ -156,12 +212,10 @@ class quiz():
         os.system('cls')
         print("Quiz is done!")
         self.result_calculate()
-        print('Your Marks is::', self.marks)
-        keyboard.add_hotkey('ctrl+alt+e', self.export)
+        self.export()
+        # print('Your Marks is::', self.marks)
         print('Press Ctrl+Alt+E to export to csv')
         print('Press \'enter\' to exit this application')
-        if threading.active_count() <= 3:
-            user_input = input()
     
 if __name__ == '__main__':
     q = quiz('quiz_question.csv')

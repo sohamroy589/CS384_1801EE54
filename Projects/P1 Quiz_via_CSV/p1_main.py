@@ -3,6 +3,7 @@ import sqlite3
 import time
 import hashlib
 from Quiz import quiz
+import csv, keyboard, threading
 
 con = sqlite3.connect('test.db')
 cur = con.cursor()
@@ -13,12 +14,11 @@ password TEXT NOT NULL,
 whatsapp_no INT UNIQUE,
 salt NOT NULL);
 ''')
-cur.execute('''CREATE TABLE IF NOT EXISTS project1_marks
-(
+cur.execute('''CREATE TABLE IF NOT EXISTS project1_marks(
     roll TEXT NOT NULL,
     quiz_num TEXT NOT NULL,
-    total_marks INT NOT NULL
-);
+    total_marks INT NOT NULL,
+    UNIQUE(roll,quiz_num));
 ''')
 
 def gen_key(password, salt):
@@ -28,6 +28,20 @@ def gen_key(password, salt):
         salt,
         100000
     )
+
+def export():
+    con = sqlite3.connect('test.db')
+    cur = con.cursor()
+    for q_name in os.listdir('quiz_wise_questions'):
+        name = q_name.rstrip('.csv')
+        data = cur.execute('SELECT * FROM project1_marks WHERE quiz_num = ?;', (name,))
+        if data:
+            with open(os.path.join(os.getcwd(), 'quiz_wise_responses', name+'.csv'), 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['roll', 'quiz_num', 'total_marks'])
+                writer.writerows(data)
+    con.close()
+    print('Successfully exported as a csv file. Please check quiz_wise_responses folder.')
 
 def register():
     os.system('cls')
@@ -91,3 +105,21 @@ q_name = input()
 
 q = quiz(q_name+'.csv', logged_in[0], logged_in[1])
 q.run()
+try:
+    cur.execute(
+        '''INSERT INTO project1_marks
+        VALUES (?, ?, ?);
+        '''
+    , (logged_in[1], q_name, q.marks))
+except:
+    cur.execute(
+        '''UPDATE project1_marks
+        SET total_marks = ?
+        WHERE roll = ? AND quiz_num = ?;
+        '''
+    , (q.marks, logged_in[1], q_name))
+con.commit()
+con.close()
+keyboard.add_hotkey('ctrl+alt+e', export)
+if threading.active_count() <= 3:
+    input()
