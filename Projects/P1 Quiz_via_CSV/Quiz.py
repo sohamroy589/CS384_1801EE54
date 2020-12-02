@@ -13,10 +13,10 @@ def get_user_input():
     user_input = input()
 
 class quiz():
-    def __init__(self, q_name=None):
+    def __init__(self, q_name, name, roll):
         self.participant = {
-            'name' : 'Soham',
-            'roll_no': '1801EE54'
+            'name' : name,
+            'roll_no': roll
         }
         self.unattempted = []
         self.questions = self.set_questions(q_name)
@@ -100,7 +100,6 @@ class quiz():
                     user_input = None
             else:
                 print('Press Ctrl+Alt+G to go to any question')
-                # user_input = None
 
     
     def show_question(self):
@@ -118,7 +117,7 @@ class quiz():
     
     def set_questions(self, q_name):
         q_list = {}
-        with open(q_name, 'r') as file:
+        with open(os.path.join(os.getcwd(), 'quiz_wise_questions', q_name), 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 q_list[row['ques_no']] = question(row)

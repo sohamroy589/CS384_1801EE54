@@ -2,6 +2,7 @@ import os
 import sqlite3
 import time
 import hashlib
+from Quiz import quiz
 
 con = sqlite3.connect('test.db')
 cur = con.cursor()
@@ -11,6 +12,13 @@ roll TEXT NOT NULL UNIQUE,
 password TEXT NOT NULL,
 whatsapp_no INT UNIQUE,
 salt NOT NULL);
+''')
+cur.execute('''CREATE TABLE IF NOT EXISTS project1_marks
+(
+    roll TEXT NOT NULL,
+    quiz_num TEXT NOT NULL,
+    total_marks INT NOT NULL
+);
 ''')
 
 def gen_key(password, salt):
@@ -74,4 +82,12 @@ while not logged_in:
     elif resp == 'q':
         break
 
-print(logged_in)
+print('Choose the quiz number that you want to attempt')
+for quiz_name in os.listdir('quiz_wise_questions'):
+    q_name = quiz_name.rstrip('.csv')
+    print(q_name, end=' ')
+print()
+q_name = input()
+
+q = quiz(q_name+'.csv', logged_in[0], logged_in[1])
+q.run()
