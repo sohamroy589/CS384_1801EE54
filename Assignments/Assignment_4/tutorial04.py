@@ -121,5 +121,4 @@ def result_generator():
     create_overall()
     os.chdir(home)
 
-if __name__ == '__main__':
-    result_generator()
+result_generator()

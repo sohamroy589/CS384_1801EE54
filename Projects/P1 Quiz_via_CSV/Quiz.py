@@ -204,7 +204,6 @@ class quiz():
                     cnt += 1
 
     def run(self):
-        global user_input
         while self.timer > 0:
             self.display()
             time.sleep(1)
@@ -213,9 +212,7 @@ class quiz():
         print("Quiz is done!")
         self.result_calculate()
         self.export()
-        # print('Your Marks is::', self.marks)
-        print('Press Ctrl+Alt+E to export to csv')
-        print('Press \'enter\' to exit this application')
+        print('Press Ctrl+Alt+E to export the results to csv within 5 seconds')
     
 if __name__ == '__main__':
     q = quiz('quiz_question.csv')

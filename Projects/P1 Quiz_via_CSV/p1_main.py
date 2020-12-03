@@ -35,7 +35,7 @@ def export():
     for q_name in os.listdir('quiz_wise_questions'):
         name = q_name.rstrip('.csv')
         data = cur.execute('SELECT * FROM project1_marks WHERE quiz_num = ?;', (name,))
-        if data:
+        if data.rowcount:
             with open(os.path.join(os.getcwd(), 'quiz_wise_responses', name+'.csv'), 'w', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(['roll', 'quiz_num', 'total_marks'])
@@ -121,5 +121,5 @@ except:
 con.commit()
 con.close()
 keyboard.add_hotkey('ctrl+alt+e', export)
-if threading.active_count() <= 3:
-    input()
+time.sleep(6)
+os._exit(1)

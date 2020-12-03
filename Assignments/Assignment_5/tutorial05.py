@@ -85,15 +85,15 @@ def rename_How_I_Met_Your_Mother(folder_name):
         except FileExistsError:
             os.remove(os.path.join(folder_name, file))
 
-if __name__ == '__main__':
-    folder = input('Enter the full name of the Web Series..').strip().lower()
-    if folder == 'fir':
-        rename_FIR('FIR')
-    elif folder == 'game of thrones':
-        rename_Game_of_Thrones('Game of Thrones')
-    elif folder == 'sherlock':
-        rename_Sherlock('Sherlock')
-    elif folder == 'suits':
-        rename_Suits('Suits')
-    elif folder == 'how i met your mother':
-        rename_How_I_Met_Your_Mother('How I Met Your Mother')
+
+folder = input('Enter the full name of the Web Series..').strip().lower()
+if folder == 'fir':
+    rename_FIR('FIR')
+elif folder == 'game of thrones':
+    rename_Game_of_Thrones('Game of Thrones')
+elif folder == 'sherlock':
+    rename_Sherlock('Sherlock')
+elif folder == 'suits':
+    rename_Suits('Suits')
+elif folder == 'how i met your mother':
+    rename_How_I_Met_Your_Mother('How I Met Your Mother')
