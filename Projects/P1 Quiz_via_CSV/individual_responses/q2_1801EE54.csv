@@ -1,0 +1,6 @@
+ques_no,question,option1,option2,option3,option4,correct_option,marks_correct_ans,marks_wrong_ans,compulsory,marked_choice,Total,Legend
+1,Film and TV institute of India is located at,Pune (Maharashtra),Pimpri (Maharashtra),Perambur (Tamilnadu),Rajkot (Gujarat),1,4,-2,n,4,0,Correct Choices
+2,For which of the following disciplines is Nobel Prize awarded?,Literature Peace and Economics,Physics and Chemistry,Physiology or Medicine,All of the above,4,3,-1,n,,1,Wrong Choices
+3,Where can Coral reefs be found in India?,The Malabar Coast,Trivandrum,Rameshwaram,Mahabalipuram,3,4,-2,y,,3,Unattmepted
+4,Which is the religion for which the Fire temple is the place of worship?,Hinduism,Jainism,Zoroastrianism,Buddhism,3,5,-2,n,,-4,Marks Obtained
+,,,,,,,,,,,16,Total Quiz Marks

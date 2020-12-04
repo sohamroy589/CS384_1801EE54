@@ -114,6 +114,7 @@ class quiz():
 
     
     def show_question(self):
+        print('\n'+'-'*50+'\n')
         print(self.cur_question.no + ')', self.cur_question.statement)
         for opt, val in self.cur_question.option.items():
             print("Option " + opt + ')', val)
