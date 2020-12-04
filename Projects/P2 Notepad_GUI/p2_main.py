@@ -1,4 +1,5 @@
-import os	 
+import os
+import re
 from tkinter import *
 from tkinter import messagebox
 from tkinter.messagebox import *
@@ -16,6 +17,7 @@ class Notepad:
 	__thisFileMenu = Menu(__thisMenuBar, tearoff=0) 
 	__thisEditMenu = Menu(__thisMenuBar, tearoff=0) 
 	__thisHelpMenu = Menu(__thisMenuBar, tearoff=0) 
+	__thisStatsMenu = Menu(__thisMenuBar, tearoff=0)
 	
 	# To add scrollbar 
 	__thisScrollBar = Scrollbar(__thisTextArea)	 
@@ -110,6 +112,10 @@ class Notepad:
 										command=self.__showAbout) 
 		self.__thisMenuBar.add_cascade(label="Help", 
 									menu=self.__thisHelpMenu) 
+		self.__thisStatsMenu.add_command(label="Word Count", command=self.__wordcount)
+		self.__thisStatsMenu.add_command(label="Char Count", command=self.__charcount)
+
+		self.__thisMenuBar.add_cascade(label="Stats", menu=self.__thisStatsMenu)
 
 		self.__root.config(menu=self.__thisMenuBar) 
 
@@ -270,6 +276,15 @@ class Notepad:
 
 			self.__thisTextArea.tag_add('found', idx, lastidx)
 			self.__thisTextArea.tag_config('found', foreground='green', background='white')
+
+	def __wordcount(self):
+		txt = self.__thisTextArea.get(1.0, END)
+		count = len(re.findall(r'(\w+)', txt))
+		showinfo("Word Count", "Total Word Count is " + str(count))
+
+	def __charcount(self):
+		txt = self.__thisTextArea.get(1.0, END)
+		showinfo("Char Count", "Total Char Count is " + str(len(txt)-1))
 
 	def run(self): 
 
