@@ -1,5 +1,6 @@
 import os	 
 from tkinter import *
+from tkinter import messagebox
 from tkinter.messagebox import *
 from tkinter.filedialog import *
 
@@ -95,7 +96,9 @@ class Notepad:
 		
 		# To give a feature of paste 
 		self.__thisEditMenu.add_command(label="Paste", 
-										command=self.__paste)		 
+										command=self.__paste)
+
+		self.__thisEditMenu.add_command(label="Find", command=self.__find)		 
 		
 		# To give a feature of editing 
 		self.__thisMenuBar.add_cascade(label="Edit", 
@@ -121,7 +124,7 @@ class Notepad:
 		# exit() 
 
 	def __showAbout(self): 
-		showinfo("Notepad","Mrinal Verma") 
+		showinfo("Notepad","Soham Roy") 
 
 	def __openFile(self): 
 		
@@ -199,6 +202,41 @@ class Notepad:
 
 	def __paste(self): 
 		self.__thisTextArea.event_generate("<<Paste>>") 
+
+	def __find(self):
+		global message, top
+		top = Toplevel()
+		top.title('Find..')
+		top.wm_iconbitmap("notepad.ico")
+		e = Entry(top, width=50)
+		e.pack(padx=10, pady=10)
+		bt1 = Button(top, text='Find', command=lambda :self.find_helper(e.get()))
+		bt1.pack(side='right', padx=10)
+		bt2 = Button(top, text='Cancel', command=self.__cancelfind)
+		bt2.pack(side='left', padx=10)
+
+	def find_helper(self, txt):
+		if txt:
+			idx = '1.0'
+			while 1: 
+				#searches for desried string from index 1 
+				idx = self.__thisTextArea.search(txt, idx, nocase=1,  
+								stopindex=END)
+				if not idx: break
+
+				#last index sum of current index and 
+				#length of text 
+				lastidx = '%s+%dc' % (idx, len(txt))  
+
+				#overwrite 'Found' at idx 
+				self.__thisTextArea.tag_add('found', idx, lastidx)  
+				idx = lastidx
+			self.__thisTextArea.tag_config('found', foreground='red')
+
+	def __cancelfind(self):
+		self.__thisTextArea.tag_remove('found', 1.0, END)
+		top.destroy()
+
 
 	def run(self): 
 
