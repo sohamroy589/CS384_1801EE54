@@ -86,14 +86,16 @@ def rename_How_I_Met_Your_Mother(folder_name):
             os.remove(os.path.join(folder_name, file))
 
 
-folder = input('Enter the full name of the Web Series..').strip().lower()
-if folder == 'fir':
+print('Enter the number correspoding to the Web Series..')
+print("1. FIR\n2. Game of Thrones\n3. Sherlock\n4. Suits\n5. How I Met Your Mother")
+inp = input()
+if inp == '1':
     rename_FIR('FIR')
-elif folder == 'game of thrones':
+elif inp == '2':
     rename_Game_of_Thrones('Game of Thrones')
-elif folder == 'sherlock':
+elif inp == '3':
     rename_Sherlock('Sherlock')
-elif folder == 'suits':
+elif inp == '4':
     rename_Suits('Suits')
-elif folder == 'how i met your mother':
+elif inp == '5':
     rename_How_I_Met_Your_Mother('How I Met Your Mother')
