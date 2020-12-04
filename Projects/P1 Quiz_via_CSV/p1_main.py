@@ -3,9 +3,8 @@ import sqlite3
 import time
 import hashlib
 from Quiz import quiz
-import csv, keyboard, threading
 
-con = sqlite3.connect('test.db')
+con = sqlite3.connect('project1_quiz_cs384.db')
 cur = con.cursor()
 cur.execute('''CREATE TABLE IF NOT EXISTS project1_registration
 (name TEXT NOT NULL,
@@ -28,20 +27,6 @@ def gen_key(password, salt):
         salt,
         100000
     )
-
-def export():
-    con = sqlite3.connect('test.db')
-    cur = con.cursor()
-    for q_name in os.listdir('quiz_wise_questions'):
-        name = q_name.rstrip('.csv')
-        data = cur.execute('SELECT * FROM project1_marks WHERE quiz_num = ?;', (name,))
-        if data.rowcount:
-            with open(os.path.join(os.getcwd(), 'quiz_wise_responses', name+'.csv'), 'w', newline='') as f:
-                writer = csv.writer(f)
-                writer.writerow(['roll', 'quiz_num', 'total_marks'])
-                writer.writerows(data)
-    con.close()
-    print('Successfully exported as a csv file. Please check quiz_wise_responses folder.')
 
 def register():
     os.system('cls')
@@ -94,7 +79,7 @@ while not logged_in:
     elif resp == '2':
         logged_in = login()
     elif resp == 'q':
-        break
+        os._exit(1)
 
 print('Choose the quiz number that you want to attempt')
 for quiz_name in os.listdir('quiz_wise_questions'):
@@ -120,6 +105,4 @@ except:
     , (q.marks, logged_in[1], q_name))
 con.commit()
 con.close()
-keyboard.add_hotkey('ctrl+alt+e', export)
-time.sleep(6)
 os._exit(1)

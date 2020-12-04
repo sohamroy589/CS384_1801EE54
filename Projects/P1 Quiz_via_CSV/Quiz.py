@@ -5,6 +5,7 @@ import re
 import threading
 import keyboard
 from Question import question
+import sqlite3
 
 user_input = None
 home = os.getcwd()
@@ -28,11 +29,13 @@ class quiz():
         keyboard.add_hotkey('ctrl+alt+u', self.show_una)
         keyboard.add_hotkey('ctrl+alt+g', self.goto_q)
         keyboard.add_hotkey('ctrl+alt+f', self.final_sub)
+        keyboard.add_hotkey('ctrl+alt+e', self.export)
         self.cur_question = None
         self.response = {}
         self.ask = False
         self.final_submit = False
         self.name = q_name.rstrip('.csv')
+        self.exported = False
 
     def final_sub(self):
         self.final_submit = True
@@ -83,6 +86,10 @@ class quiz():
                 for q in self.unattempted:
                     print(q, end=' ')
                 print()
+            if self.exported:
+                print('Successfully exported database into a csv file. Please check quiz_wise_responses folder.')
+            else:
+                print('Press Ctrl+Alt+E to export database into csv.')
             if self.cur_question:
                 self.show_question()
                 # self.get_resp()
@@ -149,8 +156,7 @@ class quiz():
             if self.questions[q].is_compulsory:
                 self.marks += self.questions[q].wrong_marks
     
-    def export(self):
-        # Export into the database
+    def gen_result(self):
         filename = self.name + '_' + self.participant['roll_no'] + '.csv'
         path = os.path.join(os.getcwd(), 'individual_responses', filename)
         if os.path.exists(path):
@@ -158,13 +164,19 @@ class quiz():
         with open(path, 'a', newline='') as f:
             with open(os.path.join(os.getcwd(), 'quiz_wise_questions', self.name+'.csv'), 'r') as rf:
                 reader = csv.DictReader(rf)
-                fieldnames = reader.fieldnames
+                fieldnames = []
+                for fn in reader.fieldnames:
+                    if not fn.startswith('time'):
+                        fieldnames.append(fn)
                 fieldnames += ['marked_choice', 'Total', 'Legend']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 cnt = 1
                 for row in reader:
-                    new_row = row.copy()
+                    new_row = {}
+                    for key in row.keys():
+                        if not key.startswith('time'):
+                            new_row[key] = row[key]
                     new_row['marked_choice'] = self.response.get(row['ques_no'])
                     if cnt == 1:
                         new_row['Legend'] = 'Correct Choices'
@@ -203,6 +215,20 @@ class quiz():
                     writer.writerow(new_row)
                     cnt += 1
 
+    def export(self):
+        self.exported = True
+        con = sqlite3.connect('project1_quiz_cs384.db')
+        cur = con.cursor()
+        for q_name in os.listdir('quiz_wise_questions'):
+            name = q_name.rstrip('.csv')
+            data = cur.execute('SELECT * FROM project1_marks WHERE quiz_num = ?;', (name,)).fetchall()
+            if len(data) > 0:
+                with open(os.path.join(os.getcwd(), 'quiz_wise_responses', name+'.csv'), 'w', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['roll', 'quiz_num', 'total_marks'])
+                    writer.writerows(data)
+        con.close()
+
     def run(self):
         while self.timer > 0:
             self.display()
@@ -211,9 +237,4 @@ class quiz():
         os.system('cls')
         print("Quiz is done!")
         self.result_calculate()
-        self.export()
-        print('Press Ctrl+Alt+E to export the results to csv within 5 seconds')
-    
-if __name__ == '__main__':
-    q = quiz('quiz_question.csv')
-    q.run()
+        self.gen_result()
