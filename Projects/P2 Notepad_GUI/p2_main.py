@@ -58,9 +58,7 @@ class Notepad:
 		top = (screenHeight / 2) - (self.__thisHeight /2) 
 		
 		# For top and bottom 
-		self.__root.geometry('%dx%d+%d+%d' % (self.__thisWidth, 
-											self.__thisHeight, 
-											left, top)) 
+		self.__root.geometry('%dx%d+%d+%d' % (self.__thisWidth, self.__thisHeight, left, top)) 
 
 		# To make the textarea auto resizable 
 		self.__root.grid_rowconfigure(0, weight=1) 
@@ -70,49 +68,39 @@ class Notepad:
 		self.__thisTextArea.grid(sticky = N + E + S + W) 
 		
 		# To open new file 
-		self.__thisFileMenu.add_command(label="New", 
-										command=self.__newFile)	 
+		self.__thisFileMenu.add_command(label="New", command=self.__newFile)	 
 		
 		# To open a already existing file 
-		self.__thisFileMenu.add_command(label="Open", 
-										command=self.__openFile) 
+		self.__thisFileMenu.add_command(label="Open", command=self.__openFile) 
 		
 		# To save current file 
-		self.__thisFileMenu.add_command(label="Save", 
-										command=self.__saveFile)
+		self.__thisFileMenu.add_command(label="Save", command=self.__saveFile)
 		self.__thisFileMenu.add_command(label="Save As", command=self.__saveasFile)	 
 
 		# To create a line in the dialog		 
 		self.__thisFileMenu.add_separator()										 
-		self.__thisFileMenu.add_command(label="Exit", 
-										command=self.__quitApplication) 
-		self.__thisMenuBar.add_cascade(label="File", 
-									menu=self.__thisFileMenu)	 
+		self.__thisFileMenu.add_command(label="Exit", command=self.__quitApplication) 
+		self.__thisMenuBar.add_cascade(label="File", menu=self.__thisFileMenu)	 
 		
 		# To give a feature of cut 
-		self.__thisEditMenu.add_command(label="Cut", 
-										command=self.__cut)			 
+		self.__thisEditMenu.add_command(label="Cut", command=self.__cut)			 
 	
 		# to give a feature of copy	 
-		self.__thisEditMenu.add_command(label="Copy", 
-										command=self.__copy)		 
+		self.__thisEditMenu.add_command(label="Copy", command=self.__copy)		 
 		
 		# To give a feature of paste 
-		self.__thisEditMenu.add_command(label="Paste", 
-										command=self.__paste)
+		self.__thisEditMenu.add_command(label="Paste", command=self.__paste)
 
 		self.__thisEditMenu.add_command(label="Find", command=self.__find)
 		self.__thisEditMenu.add_command(label="Find & Replace", command=self.__findReplace) 
 		
 		# To give a feature of editing 
-		self.__thisMenuBar.add_cascade(label="Edit", 
-									menu=self.__thisEditMenu)	 
+		self.__thisMenuBar.add_cascade(label="Edit", menu=self.__thisEditMenu)	 
 		
 		# To create a feature of description of the notepad 
-		self.__thisHelpMenu.add_command(label="About Notepad", 
-										command=self.__showAbout) 
-		self.__thisMenuBar.add_cascade(label="Help", 
-									menu=self.__thisHelpMenu) 
+		self.__thisHelpMenu.add_command(label="About Notepad", command=self.__showAbout) 
+		self.__thisMenuBar.add_cascade(label="Help", menu=self.__thisHelpMenu)
+
 		self.__thisStatsMenu.add_command(label="Word Count", command=self.__wordcount)
 		self.__thisStatsMenu.add_command(label="Char Count", command=self.__charcount)
 		self.__thisStatsMenu.add_command(label="Created Time", command=self.__createdtime)
@@ -138,9 +126,7 @@ class Notepad:
 
 	def __openFile(self): 
 		
-		self.__file = askopenfilename(defaultextension=".txt", 
-									filetypes=[("All Files","*.*"), 
-										("Text Documents","*.txt")]) 
+		self.__file = askopenfilename(defaultextension=".txt", filetypes=[("All Files","*.*"), ("Text Documents","*.txt")]) 
 
 		if self.__file == "": 
 			
@@ -169,10 +155,7 @@ class Notepad:
 
 		if self.__file == None: 
 			# Save as new file 
-			self.__file = asksaveasfilename(initialfile='Untitled.txt', 
-											defaultextension=".txt", 
-											filetypes=[("All Files","*.*"), 
-												("Text Documents","*.txt")]) 
+			self.__file = asksaveasfilename(initialfile='Untitled.txt', defaultextension=".txt", filetypes=[("All Files","*.*"), ("Text Documents","*.txt")]) 
 
 			if self.__file == "": 
 				self.__file = None
@@ -211,7 +194,7 @@ class Notepad:
 		self.__thisTextArea.event_generate("<<Copy>>") 
 
 	def __paste(self): 
-		self.__thisTextArea.event_generate("<<Paste>>") 
+		self.__thisTextArea.event_generate("<<Paste>>")
 
 	def __find(self):
 		global top
@@ -226,17 +209,17 @@ class Notepad:
 		bt2.pack(side='left', padx=10, pady=10)
 
 	def find_helper(self, txt):
+		self.__thisTextArea.tag_remove('found', 1.0, END)
 		if txt:
 			idx = '1.0'
 			while 1: 
 				#searches for desried string from index 1 
-				idx = self.__thisTextArea.search(txt, idx, nocase=1,  
-								stopindex=END)
+				idx = self.__thisTextArea.search(txt, idx, nocase=1, stopindex=END)
 				if not idx: break
 
 				#last index sum of current index and 
 				#length of text 
-				lastidx = '%s+%dc' % (idx, len(txt))  
+				lastidx = '%s + %dc' % (idx, len(txt))
 
 				#overwrite 'Found' at idx 
 				self.__thisTextArea.tag_add('found', idx, lastidx)  
@@ -310,7 +293,6 @@ class Notepad:
 		# Run main application 
 		self.__root.mainloop() 
 
-
 # Run main application 
-notepad = Notepad(width=600,height=400) 
-notepad.run() 
+notepad = Notepad(width=600,height=400)
+notepad.run()
