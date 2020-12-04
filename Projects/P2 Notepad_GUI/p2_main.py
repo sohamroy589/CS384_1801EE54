@@ -98,7 +98,8 @@ class Notepad:
 		self.__thisEditMenu.add_command(label="Paste", 
 										command=self.__paste)
 
-		self.__thisEditMenu.add_command(label="Find", command=self.__find)		 
+		self.__thisEditMenu.add_command(label="Find", command=self.__find)
+		self.__thisEditMenu.add_command(label="Find & Replace", command=self.__findReplace) 
 		
 		# To give a feature of editing 
 		self.__thisMenuBar.add_cascade(label="Edit", 
@@ -204,16 +205,16 @@ class Notepad:
 		self.__thisTextArea.event_generate("<<Paste>>") 
 
 	def __find(self):
-		global message, top
+		global top
 		top = Toplevel()
 		top.title('Find..')
 		top.wm_iconbitmap("notepad.ico")
 		e = Entry(top, width=50)
 		e.pack(padx=10, pady=10)
 		bt1 = Button(top, text='Find', command=lambda :self.find_helper(e.get()))
-		bt1.pack(side='right', padx=10)
+		bt1.pack(side='right', padx=10, pady=10)
 		bt2 = Button(top, text='Cancel', command=self.__cancelfind)
-		bt2.pack(side='left', padx=10)
+		bt2.pack(side='left', padx=10, pady=10)
 
 	def find_helper(self, txt):
 		if txt:
@@ -231,19 +232,49 @@ class Notepad:
 				#overwrite 'Found' at idx 
 				self.__thisTextArea.tag_add('found', idx, lastidx)  
 				idx = lastidx
-			self.__thisTextArea.tag_config('found', foreground='red')
+			self.__thisTextArea.tag_config('found', foreground='red', background='yellow')
 
 	def __cancelfind(self):
 		self.__thisTextArea.tag_remove('found', 1.0, END)
 		top.destroy()
 
+	def __findReplace(self):
+		global top
+		top = Toplevel()
+		top.title("Find & Replace")
+		top.wm_iconbitmap("notepad.ico")
+		lb1 = Label(top, text='Find', padx=10, pady=10)
+		lb1.grid(row=0, column=0)
+		efind = Entry(top, width=50)
+		efind.grid(row=0, column=1, padx=10, pady=10)
+
+		lb2 = Label(top, text="Replace With", padx=10, pady=10)
+		lb2.grid(row=1, column=0)
+		erep = Entry(top, width=50)
+		erep.grid(row=1, column=1, padx=10, pady=10)
+
+		bt = Button(top, text="Find & Replace", command=lambda :self.__replace(efind.get(), erep.get()))
+		bt.grid(row=2, column=2, padx=10, pady=10)
+		bt2 = Button(top, text='Exit', command=self.__cancelfind)
+		bt2.grid(row=2, column=0, padx=10, pady=10)
+	
+	def __replace(self, txt, rep):
+		if txt:
+			idx = '1.0'
+			idx = self.__thisTextArea.search(txt, idx, stopindex=END)
+			lastidx = '%s+%dc' % (idx, len(txt))
+
+			self.__thisTextArea.delete(idx, lastidx)
+			self.__thisTextArea.insert(idx, rep)
+			lastidx = '%s+%dc' % (idx, len(rep))
+
+			self.__thisTextArea.tag_add('found', idx, lastidx)
+			self.__thisTextArea.tag_config('found', foreground='green', background='white')
 
 	def run(self): 
 
 		# Run main application 
 		self.__root.mainloop() 
-
-
 
 
 # Run main application 
