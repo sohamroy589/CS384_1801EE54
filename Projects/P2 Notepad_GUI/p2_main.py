@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from tkinter import *
 from tkinter import messagebox
 from tkinter.messagebox import *
@@ -40,7 +41,7 @@ class Notepad:
 
 		try: 
 			self.__thisHeight = kwargs['height'] 
-		except KeyError: 
+		except KeyError:
 			pass
 
 		# Set the window text 
@@ -114,6 +115,8 @@ class Notepad:
 									menu=self.__thisHelpMenu) 
 		self.__thisStatsMenu.add_command(label="Word Count", command=self.__wordcount)
 		self.__thisStatsMenu.add_command(label="Char Count", command=self.__charcount)
+		self.__thisStatsMenu.add_command(label="Created Time", command=self.__createdtime)
+		self.__thisStatsMenu.add_command(label="Modified Time", command=self.__modifiedtime)
 
 		self.__thisMenuBar.add_cascade(label="Stats", menu=self.__thisStatsMenu)
 
@@ -285,6 +288,22 @@ class Notepad:
 	def __charcount(self):
 		txt = self.__thisTextArea.get(1.0, END)
 		showinfo("Char Count", "Total Char Count is " + str(len(txt)-1))
+
+	def __createdtime(self):
+		message = None
+		if self.__file:
+			message = "Created: %s" % time.ctime(os.path.getctime(self.__file))
+		else:
+			message = "File is not created yet"
+		showinfo("Create Time", message)
+
+	def __modifiedtime(self):
+		message = None
+		if self.__file:
+			message = "Last modified: %s" % time.ctime(os.path.getmtime(self.__file))
+		else:
+			message = "File is not created yet"
+		showinfo("Modified Time", message)
 
 	def run(self): 
 
