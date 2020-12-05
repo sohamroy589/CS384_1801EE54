@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import time
-import hashlib
+import hashlib, csv
 from Quiz import quiz
 
 con = sqlite3.connect('project1_quiz_cs384.db')
@@ -70,6 +70,16 @@ def login():
             print('Incorrect password!')
             time.sleep(2)
 
+def export():
+    for q_name in os.listdir('quiz_wise_questions'):
+        name = q_name.rstrip('.csv')
+        data = cur.execute('SELECT * FROM project1_marks WHERE quiz_num = ?;', (name,)).fetchall()
+        if len(data) > 0:
+            with open(os.path.join(os.getcwd(), 'quiz_wise_responses', name+'.csv'), 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['roll', 'quiz_num', 'total_marks'])
+                writer.writerows(data)
+
 logged_in = None
 while not logged_in:
     os.system('cls')
@@ -104,5 +114,7 @@ except:
         '''
     , (q.marks, logged_in[1], q_name))
 con.commit()
+if q.willexport:
+    export()
 con.close()
 os._exit(1)

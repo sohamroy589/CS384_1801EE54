@@ -36,6 +36,7 @@ class quiz():
         self.final_submit = False
         self.name = q_name.rstrip('.csv')
         self.exported = False
+        self.willexport = False
 
     def final_sub(self):
         self.final_submit = True
@@ -87,7 +88,7 @@ class quiz():
                     print(q, end=' ')
                 print()
             if self.exported:
-                print('Successfully exported database into a csv file. Please check quiz_wise_responses folder.')
+                print('Database of quiz results will be exported into a csv file. Please check quiz_wise_responses folder.')
             else:
                 print('Press Ctrl+Alt+E to export database into csv.')
             if self.cur_question:
@@ -218,17 +219,7 @@ class quiz():
 
     def export(self):
         self.exported = True
-        con = sqlite3.connect('project1_quiz_cs384.db')
-        cur = con.cursor()
-        for q_name in os.listdir('quiz_wise_questions'):
-            name = q_name.rstrip('.csv')
-            data = cur.execute('SELECT * FROM project1_marks WHERE quiz_num = ?;', (name,)).fetchall()
-            if len(data) > 0:
-                with open(os.path.join(os.getcwd(), 'quiz_wise_responses', name+'.csv'), 'w', newline='') as f:
-                    writer = csv.writer(f)
-                    writer.writerow(['roll', 'quiz_num', 'total_marks'])
-                    writer.writerows(data)
-        con.close()
+        self.willexport = True
 
     def run(self):
         while self.timer > 0:
