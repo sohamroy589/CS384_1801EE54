@@ -4,7 +4,7 @@ import re
 import shutil
 
 # Global variable to store the current working directory
-home = r'C:\Users\hp\Desktop\CS384_1801EE54\Assignment4'
+home = os.getcwd()
 # Name of the input file
 input_file = 'acad_res_stud_grades.csv'
 # Grade Numeric Equivalent
